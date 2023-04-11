@@ -26,7 +26,7 @@ class UserController extends AbstractController
         
         $user->setCreatedAt(new DateTime());
         $user->setUpdatedAt(new DateTime());
-        $user->setRoles(['ROLES_USER']);
+        $user->setRoles(['ROLE_USER']);
 
         $user->setPassword(
             $hasher->hashPassword($user, $user->getPassword())
