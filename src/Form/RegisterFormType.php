@@ -63,7 +63,7 @@ class RegisterFormType extends AbstractType
                 ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => "Je m'inscris",
+                'label' => $options['category'] ? "Modifier ". '' . $options['category']->getName() : "Ajouter",
                 'validate' => false,
                 'attr' => [
                     'class' => 'd-block mx-auto my-3 col-4 btn btn-primary'
