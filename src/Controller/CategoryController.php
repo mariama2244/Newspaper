@@ -24,8 +24,12 @@ class CategoryController extends AbstractController
         ->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
+
             $category->setCreatedAt(new DateTime());
             $category->setUpdatedAt(new DateTime());
+
+            # L'alias nous sevira pour construire l'url d'un article
+            $category->setAlias($slugger->slug($category->getName()));
 
             $repository->save($category, true);
 
@@ -33,26 +37,33 @@ class CategoryController extends AbstractController
 
             return $this->redirectToRoute('show_dashboard');
         }
+
         return $this->render('category/add_category.html.twig', [
             'form' => $form->createView(),
         ]);
     } // end addCat()
 
-    #[Route('/modifier-categorie', name: 'update_category', methods: ['GET', 'POST'])]
-    public function updateCat(Category $category, Request $request, CategoryRepository $resository): Response
+    //-------------------------------------------------------------------------------------------
+
+    //------------------------------------update category----------------------------------------------
+
+    #[Route('/modifier-categorie/{id}', name: 'update_category', methods: ['GET', 'POST'])]
+    public function updateCat(Category $category, Request $request, CategoryRepository $repository, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(CategoryFormType::class, $category, [
-
+              'category' => $category,
         ])
         ->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
 
             $category->setUpdatedAt(new DateTime());
+
+            $category->setAlias($slugger->slug($category->getName()));
             
             $repository->save($category, true);
 
-            $this->addFlash('success', "la modification aétée bien enregistrée.");
+            $this->addFlash('success', "la modification a été bien enregistrée.");
             return $this->redirectToRoute('show_dashboard');
         }  // end if form()
 
@@ -61,22 +72,37 @@ class CategoryController extends AbstractController
             'category' => $category,
 
         ]);
-    }
+    }// end update
 
-    #[Route('/restaurer-une-categorie/{id}', name: 'restore_category', methods: ['GET'])]
-    public function restoreCategory(Category $category, CategoryRepository $repository): Response
+    // -----------------------------------------------------------------------------------------
+
+    //---------------------------soft delete-----------------------------------------------------
+    #[Route('/archiever-categorie/{id}', name: 'soft_delete_category', methods: ['GET'])]
+    public function softDeleteCat(Category $category, CategoryRepository $repository): Response
     {
-        $category->setDeleteAt(null);
+        $category->setDeletedAt(new DateTime());
 
         $repository->save($category, true);
 
-        $this->addFlash('success', "La categorie". $category->getName() . "a bien été restauré.");
-        return $this->redirectToRoute('show_home');
-    }
+        $this->addFlash('success', "La catégorie " . $category->getName() . "a bien été archivée !");
+        return $this->redirectToRoute('show_dashboard');
+    } // end deleteCat()
+    // --------------------------------------------------------------------------
 
 
+    //-----------------------------restore category-----------------------------------------
+    #[Route('/restaurer-categorie/{id}', name: 'restore_category', methods: ['GET'])]
+    public function restoreCat(Category $category, CategoryRepository $repository): Response
+    {
+        $category->setDeletedAt(null);
 
+        $repository->save($category, true);
 
+        $this->addFlash('success', "La catégorie " . $category->getName() . "a bien été restauré !");
+        return $this->redirectToRoute('show_dashboard');
+    } // end restoreCat()
+
+    // ---------------------------------------------hard delete----------------------------------------
 
     #[Route('/supprimer-une-categorie/{id}', name: 'hard_delete_category', methods: ['GET'])]
     public function hardDeleteCategory(Category $category, CategoryRepository $repository): Response

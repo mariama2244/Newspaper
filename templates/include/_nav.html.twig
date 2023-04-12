@@ -36,9 +36,9 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{ path('show_dashboard') }}">Dashboard</a></li>
-            <li><a class="dropdown-item" href="{{ path('add_category') }}">Ajouter un article</a></li>
+            <li><a class="dropdown-item" href="">Ajouter un article</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{{ path('add_category') }}">Ajouter une catégorie</a></li>
+            <li><a class="dropdown-item" href="">Ajouter une catégorie</a></li>
           </ul>
         </li>
         {% endif %}
@@ -51,3 +51,9 @@
     </div>
   </div>
 </nav>
+
+<div class="bg-light">
+
+  {{ render(url('render_categories_in_nav'))}}
+
+</div>
