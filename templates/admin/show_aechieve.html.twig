@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voir les archives{% endblock %}
+
+{% block body %}
+
+    <h1 class="text-center my-3 text-warning">Les Archives</h1>
+
+    {# ################# FLASHES ################# #}
+    <div class="row">
+        <div class="col-6 mx-auto">
+            {% include 'include/_flashes.html.twig' %}
+        </div>
+    </div>
+    {# ################# FLASHES ################# #}
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+    {# ################# BUTTONS ################# #}
+    <div class="row my-5 mx-auto">
+        <div class="col-4">
+            <a class="btn btn-sm btn-outline-dark" href="{{ path('show_dashboard') }}"><i class="bi bi-arrow-left-circle"></i> Retour au tableau de bord</a>
+        </div>
+    </div>
+    {# ################# BUTTONS ################# #}
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+    {# ################# TABLE 1 ################# #}
+    <div class="row">
+        <div class="col-10 mx-auto my-4">
+
+            <h2 class="text-center">Tous les articles archivés</h2>
+
+        </div>
+    </div>
+    {# ################# TABLE 1 ################# #}
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+    <div class="row">
+        {# ################# TABLE 2 ################# #}
+        <div class="col-6">
+
+            <h2 class="text-center">Toutes les catégories archivées</h2>
+
+             <table class="table">
+               <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nom</th>
+                    <th>Alias</th>
+                    <th>Crée le</th>
+                    <th>Actions</th>
+                  </tr>
+               </thead>
+               <tbody>
+
+                  {% for category in categories %}
+
+                  <tr class="text-center">
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.alias }}</td>
+                    <td>{{ category.createdAt | date('d/m/Y') }}</td>
+                    <td> 
+                      <a href="{{ path('restore_category', {'id': category.id})}}" class="text-info" title="Restaurer la catégorie"></a>
+                      <a href="{{ path('restore_category', {'id': category.id}) }}" class="text-danger" title="Supprimer définativement la categorie" onClick="return confirm(Vous voulais)"></a>
+                    </td>
+                  </tr>
+
+                  {% endfor %}
+               </tbody>
+               </table>
+
+        </div>
+        {# ################# TABLE 2 ################# #}
+
+        {# -------------------------------------------------------------------------------------------------- #}
+
+        {# ################# TABLE 3 ################# #}
+        <div class="col-6">
+            <h2 class="text-center">Tous les utilisateurs archivés</h2>
+
+        </div>
+        {# ################# TABLE 3 ################# #}
+    </div>
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+{% endblock %}
