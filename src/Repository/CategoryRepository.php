@@ -38,6 +38,20 @@ class CategoryRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+ 
+    #cette methode qui est une requete DQL (Doctrine Query Language) nous permet de récuperer les 
+    # categorie archivées
+    public function findAllArchived()
+    {
+    
+       
+       return $this->createQueryBuilder('c') # SELECT * FROM category
+         ->where('c.deletedAt IS NOT NULL') # WHERE deleted_at IS NOT NULL
+         ->getQuery() # permet de récupérer le requete SQL
+         ->getResult() # permet de récupérer les récupérer les résultats de la requete
+
+        ; 
+    }
 
 //    /**
 //     * @return Category[] Returns an array of Category objects
