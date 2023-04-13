@@ -15,7 +15,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryController extends AbstractController
 {
-    #[Route('/ajouter-une-categorie', name: 'app_category', methods: ['GET', 'POST'])]
+    #[Route('/ajouter-une-categorie', name: 'add_category', methods: ['GET', 'POST'])]
     public function addCat(Request $request, CategoryRepository $repository, SluggerInterface $slugger): Response
     {
         $category = new Category();

@@ -13,7 +13,8 @@ class RenderController extends AbstractController
    public function renderCategoriesInNav(CategoryRepository $repository): Response
    {
        $categories = $repository->findBy(['deletedAt' => null], ['name' => 'ASC']);
-       return $this->render('render/categorie_in_nav.html.twig', [
+
+       return $this->render('render/categories_in_nav.html.twig', [
         'categories' => $categories
        ]);
    }
