@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 
+use App\Entity\User;
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,14 +30,18 @@ class AdminController extends AbstractController
       
        $categories = $entityManager->getRepository(Category::class)->findBy(['deletedAt' => null]);
        $articles = $entityManager->getRepository(Article::class)->findBy(['deletedAt' => null]);
+       $users = $entityManager->getRepository(User::class)->findBy(['deletedAt' => null]);
 
 
        return $this->render('admin/show_dashboard.html.twig', [
         'categories' => $categories,
-        'articles' => $articles 
+        'articles' => $articles, 
+        'users' => $users
         
        ]);
    } // end showDashboard()
+
+   //--------------------------------- see your archieves---------------------------------------------
    #[Route('voir-les-archieves', name: 'show_archieve', methods: ['GET'])]
    public function showArchieves(EntityManagerInterface $entityManager): Response
    {
@@ -46,5 +52,24 @@ class AdminController extends AbstractController
         'categories' => $categories,
         'articles' => $articles
     ]);
-   }
+   }// end showArchieve()
+
+   //------------------------ modify role user--------------------------------------------
+
+   #[Route('/modifier-role-user/{id}', name: 'modify_user_role', methods: ['GET'])]
+   public function modifyUserRole(User $user, UserRepository $repository): Response 
+   {
+      # -1 : recuperer son role 2 : modifier le role 3 save en BDD
+
+      if(in_array('ROLE_USER', $user->getRoles())) {
+         $user->setRoles(['ROLE_ADMIN']);
+      }
+      else {
+        $user->setRoles(['ROLES_USER']);
+      }
+
+      $repository->save($user, true);
+
+      return $this->redirectToRoute('show_dashboard');
+   }// end modify
 } // end class
